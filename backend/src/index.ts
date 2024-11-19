@@ -6,6 +6,7 @@ import { PORT } from "./constants";
 import connectDB from "./config/db";
 import { logger } from "./utils/logger";
 import router from "./routes";
+import { specs, swaggerUi } from "./config/swagger";
 
 const app = express();
 
@@ -17,6 +18,8 @@ connectDB()
     logger.error("Failed to connect to MongoDB", error);
     process.exit(1);
   });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(cors());
 app.use(helmet());
