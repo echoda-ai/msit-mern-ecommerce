@@ -1,0 +1,1 @@
+{"root":["./src/constants.ts","./src/index.ts","./src/config/db.ts","./src/config/get-env.ts","./src/config/swagger.ts","./src/middlewares/validation.middleware.ts","./src/model/user.model.ts","./src/routes/auth.route.ts","./src/routes/index.ts","./src/schema/user.schema.ts","./src/utils/logger.ts","./src/utils/status-code.ts"],"version":"5.6.3"}
