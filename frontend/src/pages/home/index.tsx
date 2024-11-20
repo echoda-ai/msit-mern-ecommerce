@@ -1,3 +1,9 @@
+import { AdvertisementBanner } from "../../components/AdvertisementBanner";
+
 export const Home = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <AdvertisementBanner />
+    </>
+  );
 };
