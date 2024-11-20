@@ -9,9 +9,11 @@ const router = Router();
 
 /**
  * @swagger
- * /api/user/avatar:
+ * /api/users/avatar:
  *   post:
  *     summary: Set avatar picture
+ *     tags:
+ *        - Users
  *     consumes:
  *       - multipart/form-data
  *     requestBody:
@@ -57,6 +59,83 @@ router.post(
       res.status(StatusCodes.OK).json({
         success: true,
         data: updateUser,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     description: This endpoint retrieves all users from the database.
+ *     tags:
+ *        - Users
+ *     security:
+ *       - BearerAuth: []  # Assuming JWT authentication is used
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *       401:
+ *         description: Unauthorized. Invalid or missing token.
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/",
+  jwtVerify,
+  async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const result = await userModel.find({}, "username email");
+      res.status(StatusCodes.OK).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/users/logout:
+ *   delete:
+ *     summary: Logs out the user by clearing the authentication token.
+ *     tags:
+ *        - Users
+ *     description: Clears the token cookie to log the user out of the system.
+ *     responses:
+ *       200:
+ *         description: Successfully logged out, token cookie cleared.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items: {}
+ *                   example: []
+ *       400:
+ *         description: Bad request, usually indicates a problem with the request.
+ *       401:
+ *         description: Unauthorized, if the user is not authenticated.
+ *       500:
+ *         description: Internal server error, something went wrong on the server side.
+ */
+router.delete(
+  "/logout",
+  jwtVerify,
+  async (_req: any, res: Response, next: NextFunction) => {
+    try {
+      res.clearCookie("token");
+      res.status(StatusCodes.OK).json({
+        success: true,
+        data: [],
       });
     } catch (error) {
       next(error);

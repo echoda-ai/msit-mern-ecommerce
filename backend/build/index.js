@@ -35,6 +35,8 @@ const db_1 = __importDefault(require("./config/db"));
 const logger_1 = require("./utils/logger");
 const routes_1 = __importDefault(require("./routes"));
 const swagger_1 = require("./config/swagger");
+const error_middleware_1 = require("./middlewares/error.middleware");
+const status_code_1 = require("./utils/status-code");
 const app = (0, express_1.default)();
 (0, db_1.default)()
     .then(() => {
@@ -50,4 +52,11 @@ app.use((0, helmet_1.default)());
 app.use((0, express_1.json)({ limit: "8mb" }));
 app.use((0, cookie_parser_1.default)());
 app.use("/api", routes_1.default);
+app.use("*", (_, res) => {
+    res.status(status_code_1.StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "NOT_FOUND",
+    });
+});
+app.use(error_middleware_1.errorHandler);
 app.listen(constants_1.PORT, () => logger_1.logger.info(`Server is running on port ${constants_1.PORT}`));

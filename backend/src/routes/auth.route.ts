@@ -15,6 +15,8 @@ const router = Router();
  *   post:
  *     summary: Register a new user
  *     description: Create a new user account with the provided details.
+ *     tags:
+ *        - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -79,6 +81,8 @@ router.post(
  *   post:
  *     summary: Login a new user
  *     description: Login with credential
+ *     tags:
+ *        - Authentication
  *     requestBody:
  *       required: true
  *       content:

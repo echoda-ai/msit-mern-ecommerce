@@ -68,6 +68,7 @@ router.post("/sign-up", (0, validation_middleware_1.validateData)(user_schema_1.
         const userData = new user_model_1.default(payload);
         const saveUSer = userData.save();
         res.status(status_code_1.StatusCodes.CREATED).json({
+            success: true,
             data: saveUSer,
         });
     }
