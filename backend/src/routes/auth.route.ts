@@ -64,6 +64,7 @@ router.post(
       const saveUSer = userData.save();
 
       res.status(StatusCodes.CREATED).json({
+        success: true,
         data: saveUSer,
       });
     } catch (error) {
