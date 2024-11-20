@@ -44,25 +44,21 @@ router.post(
   jwtVerify,
   upload.single("file"),
   async (req: any, res: Response, next: NextFunction) => {
-    try {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "avatar",
-      });
-      const updateUser = await userModel.findByIdAndUpdate(
-        req.userId,
-        {
-          avatar: result.secure_url,
-        },
-        { new: true, projection: { avatar: 1 } }
-      );
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "avatar",
+    });
+    const updateUser = await userModel.findByIdAndUpdate(
+      req.userId,
+      {
+        avatar: result.secure_url,
+      },
+      { new: true, projection: { avatar: 1 } }
+    );
 
-      res.status(StatusCodes.OK).json({
-        success: true,
-        data: updateUser,
-      });
-    } catch (error) {
-      next(error);
-    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: updateUser,
+    });
   }
 );
 
@@ -88,12 +84,8 @@ router.get(
   "/",
   jwtVerify,
   async (req: any, res: Response, next: NextFunction) => {
-    try {
-      const result = await userModel.find({}, "username email");
-      res.status(StatusCodes.OK).json({ success: true, data: result });
-    } catch (error) {
-      next(error);
-    }
+    const result = await userModel.find({}, "username email");
+    res.status(StatusCodes.OK).json({ success: true, data: result });
   }
 );
 
@@ -131,15 +123,11 @@ router.delete(
   "/logout",
   jwtVerify,
   async (_req: any, res: Response, next: NextFunction) => {
-    try {
-      res.clearCookie("token");
-      res.status(StatusCodes.OK).json({
-        success: true,
-        data: [],
-      });
-    } catch (error) {
-      next(error);
-    }
+    res.clearCookie("token");
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: [],
+    });
   }
 );
 

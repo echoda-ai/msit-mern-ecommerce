@@ -12,14 +12,9 @@ import { StatusCodes } from "./utils/status-code";
 
 const app = express();
 
-connectDB()
-  .then(() => {
-    logger.info("Connect to mongodb successfully");
-  })
-  .catch((error) => {
-    logger.error("Failed to connect to MongoDB", error);
-    process.exit(1);
-  });
+connectDB().then(() => {
+  logger.info("Connect to mongodb successfully");
+});
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -28,7 +23,7 @@ app.use(helmet());
 app.use(json({ limit: "8mb" }));
 app.use(cookieParser());
 app.use("/api", router);
-app.use("*", (_, res: Response) => {
+app.use(/.*/, (_, res: Response) => {
   res.status(StatusCodes.NOT_FOUND).json({
     success: false,
     message: "NOT_FOUND",

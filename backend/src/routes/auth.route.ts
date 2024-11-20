@@ -45,33 +45,29 @@ router.post(
   "/sign-up",
   validateData(userSchema),
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userModel.findOne({ email });
-      if (user) {
-        res.status(StatusCodes.CONFLICT).json({
-          success: false,
-          message: "ALREADY_EXIST",
-        });
-        return;
-      }
-
-      const salt = bcrypt.genSaltSync(10);
-      const hashPassword = await bcrypt.hashSync(password, salt);
-      const payload = {
-        ...req.body,
-        password: hashPassword,
-      };
-      const userData = new userModel(payload);
-      const saveUSer = userData.save();
-
-      res.status(StatusCodes.CREATED).json({
-        success: true,
-        data: saveUSer,
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+    if (user) {
+      res.status(StatusCodes.CONFLICT).json({
+        success: false,
+        message: "ALREADY_EXIST",
       });
-    } catch (error) {
-      next(error);
+      return;
     }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashPassword = await bcrypt.hashSync(password, salt);
+    const payload = {
+      ...req.body,
+      password: hashPassword,
+    };
+    const userData = new userModel(payload);
+    const saveUSer = userData.save();
+
+    res.status(StatusCodes.CREATED).json({
+      success: true,
+      data: saveUSer,
+    });
   }
 );
 
@@ -107,49 +103,45 @@ router.post(
   "/sign-in",
   validateData(loginSchema),
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userModel.findOne({ email });
-      if (!user) {
-        res.status(StatusCodes.NOT_FOUND).json({
-          success: false,
-          message: "USER_NOT_FOUND",
-        });
-        return;
-      }
-
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        user.password as string
-      );
-      if (!isPasswordValid) {
-        res.status(StatusCodes.UNAUTHORIZED).json({
-          success: false,
-          message: "INVALID_CREDENTIALS",
-        });
-        return;
-      }
-      const payload = {
-        id: user._id,
-        username: user.username,
-        iat: Math.floor(Date.now() / 1000), // Current timestamp
-      };
-      const token = await jwt.sign(payload, JWT_SECRET, {
-        expiresIn: 60 * 60 * 8, // Expire in 8hours
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "USER_NOT_FOUND",
       });
-
-      const tokenOption = {
-        httpOnly: true,
-        secure: true,
-      };
-
-      res.cookie("token", token, tokenOption).status(StatusCodes.OK).json({
-        success: true,
-        data: token,
-      });
-    } catch (error) {
-      next(error);
+      return;
     }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password as string
+    );
+    if (!isPasswordValid) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "INVALID_CREDENTIALS",
+      });
+      return;
+    }
+    const payload = {
+      id: user._id,
+      username: user.username,
+      iat: Math.floor(Date.now() / 1000), // Current timestamp
+    };
+    const token = await jwt.sign(payload, JWT_SECRET, {
+      expiresIn: 60 * 60 * 8, // Expire in 8hours
+    });
+
+    const tokenOption = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    res.cookie("token", token, tokenOption).status(StatusCodes.OK).json({
+      success: true,
+      data: token,
+    });
   }
 );
 
