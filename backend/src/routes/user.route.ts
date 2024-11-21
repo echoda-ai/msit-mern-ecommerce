@@ -119,16 +119,40 @@ router.get(
  *       500:
  *         description: Internal server error, something went wrong on the server side.
  */
-router.delete(
-  "/logout",
-  jwtVerify,
-  async (_req: any, res: Response, next: NextFunction) => {
-    res.clearCookie("token");
-    res.status(StatusCodes.OK).json({
-      success: true,
-      data: [],
-    });
-  }
-);
+router.delete("/logout", jwtVerify, async (_req: any, res: Response) => {
+  res.clearCookie("token");
+  res.status(StatusCodes.OK).json({
+    success: true,
+    data: [],
+  });
+});
+
+/**
+ * @swagger
+ * /api/users/profile:
+ *   get:
+ *     summary: Get user
+ *     description: This endpoint retrieves all users from the database.
+ *     tags:
+ *        - Users
+ *     security:
+ *       - BearerAuth: []  # Assuming JWT authentication is used
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *       401:
+ *         description: Unauthorized. Invalid or missing token.
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/profile", jwtVerify, async (req: any, res: Response) => {
+  const user = await userModel
+    .findById(req.userId)
+    .select("username email avatar");
+  res.status(StatusCodes.OK).json({
+    success: true,
+    data: user,
+  });
+});
 
 export default router;

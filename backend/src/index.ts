@@ -18,7 +18,12 @@ connectDB().then(() => {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(json({ limit: "8mb" }));
 app.use(cookieParser());
