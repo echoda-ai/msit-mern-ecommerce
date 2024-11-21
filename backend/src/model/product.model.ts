@@ -8,12 +8,14 @@ const productSchema = new mongoose.Schema(
     productImage: [],
     description: String,
     price: Number,
-    salePrice: Number,
+    sellingPrice: Number,
   },
   {
     timestamps: true,
   }
 );
+
+productSchema.index({ category: 1 });
 
 const productModel = mongoose.model("product", productSchema);
 

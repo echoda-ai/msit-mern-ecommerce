@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Response, Router } from "express";
 import upload from "../middlewares/multer.middleware";
 import { jwtVerify } from "../middlewares/jwt-verifiy.middleware";
 import userModel from "../model/user.model";
@@ -43,7 +43,7 @@ router.post(
   "/avatar",
   jwtVerify,
   upload.single("file"),
-  async (req: any, res: Response, next: NextFunction) => {
+  async (req: any, res: Response) => {
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: "avatar",
     });
@@ -80,14 +80,10 @@ router.post(
  *       500:
  *         description: Internal server error
  */
-router.get(
-  "/",
-  jwtVerify,
-  async (req: any, res: Response, next: NextFunction) => {
-    const result = await userModel.find({}, "username email");
-    res.status(StatusCodes.OK).json({ success: true, data: result });
-  }
-);
+router.get("/", jwtVerify, async (req: any, res: Response) => {
+  const result = await userModel.find({}, "username email");
+  res.status(StatusCodes.OK).json({ success: true, data: result });
+});
 
 /**
  * @swagger
