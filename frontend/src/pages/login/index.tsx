@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API from "../../state/base";
 import { API_ENDPOINTS } from "../../configs/apiEndpoints";
 import { AxiosError } from "axios";
+import Context from "../../context";
 
 export const Login = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { getUserProfile } = useContext<any>(Context);
 
   const navigate = useNavigate();
 
@@ -28,6 +32,7 @@ export const Login = () => {
     try {
       await API.post(API_ENDPOINTS.AUTH.LOGIN, data);
       toast.success("User login successfully");
+      getUserProfile();
       navigate("/");
     } catch (error) {
       if (error instanceof AxiosError) {

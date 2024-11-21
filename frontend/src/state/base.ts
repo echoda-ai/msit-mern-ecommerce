@@ -8,6 +8,7 @@ const API = axios.create({
     Accept: "application/json, text/plain, */*",
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export default API;

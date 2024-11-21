@@ -1,9 +1,9 @@
 export const Logo = () => {
   return (
     <img
-      width="90"
-      height="50"
-      src="https://th.bing.com/th/id/OIP.17Z49hdASIEoD7ez2FX_QQHaHa?rs=1&pid=ImgDetMain"
+      width="60"
+      height="30"
+      src="https://png.pngtree.com/png-clipart/20230421/original/pngtree-sangkran-khmer-new-year-png-image_9071048.png"
       alt="SEANGLAY"
     />
   );

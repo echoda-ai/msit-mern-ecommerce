@@ -1,45 +1,43 @@
 import { Header } from "./components/layout/Header";
-import { Footer } from "./components/layout/Footer";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Outlet } from "react-router-dom";
-import { AxiosError } from "axios";
 import API from "./state/base";
 import { API_ENDPOINTS } from "./configs/apiEndpoints";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
+import Context from "./context";
 
 function App() {
   const dispatch = useDispatch();
 
-  const getUser = async () => {
-    try {
-      const res = await API.get(API_ENDPOINTS.USER.PROFILE, {
-        withCredentials: true,
-      });
+  const getUserProfile = async () => {
+    const res = await API.get(API_ENDPOINTS.USER.PROFILE, {
+      withCredentials: true,
+    });
+
+    if (res.data.success) {
       dispatch(setUserDetails(res.data.data));
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
     }
   };
+
   useEffect(() => {
-    getUser();
+    getUserProfile();
   }, []);
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <Context.Provider
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        value={{ getUserProfile }}
+      >
         <ToastContainer position="top-center" />
         <Header />
-        <main className="flex-grow">
+        <main className="min-h-[calc(100vh-120px)] pt-16">
           <Outlet />
         </main>
-        <Footer />
-      </div>
+      </Context.Provider>
     </>
   );
 }

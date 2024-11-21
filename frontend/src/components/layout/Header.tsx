@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../Logo";
-import { GrSearch } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { AxiosError } from "axios";
@@ -10,6 +9,7 @@ import { API_ENDPOINTS } from "../../configs/apiEndpoints";
 import { clearUserDetails } from "../../store/userSlice";
 
 export const Header = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const user = useSelector((state) => state?.user.user);
 
@@ -39,16 +39,6 @@ export const Header = () => {
         <Link to={"/"}>
           <Logo />
         </Link>
-        <div className="hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow pl-2">
-          <input
-            type="text"
-            className="w-full outline-none"
-            onChange={() => {}}
-          />
-          <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full text-white">
-            <GrSearch />
-          </div>
-        </div>
 
         <div className="flex items-center gap-7">
           <div className="relative flex justify-center">
@@ -77,10 +67,10 @@ export const Header = () => {
               </button>
             ) : (
               <Link
-                to={"/login"}
-                className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700"
+                to="/login"
+                className="bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700"
               >
-                Login
+                Sign in
               </Link>
             )}
           </div>
