@@ -7,4 +7,7 @@ export const API_ENDPOINTS = {
     PROFILE: "users/profile",
     LOGOUT: "users/logout",
   },
+  CATEGORY: {
+    GET: "categories",
+  },
 };
